@@ -1,42 +1,34 @@
 
-# DebugMate AI
+# Debugger AI Agent
 
-An AI-powered desktop application that helps programmers
-understand code errors and learn how to fix them.
+An AI-powered code debugging and development assistant
+
+The application allows developers to submit source code and receive AI-generated bug diagnoses, explanations, corrected code, improvement suggestions, and recommended test cases.
 
 ## Features
 
-- Multiple programming language options
-- AI-generated debugging diagnosis
-- Corrected code suggestions
-- Beginner-friendly or detailed explanations
-- Follow-up questions
-- Tkinter desktop interface
+- Bug Detection: Identifies potential syntax, runtime, and logical errors.
+- Error Explanation: Explains why a problem occurs.
+- Code Correction: Generates a proposed corrected version of the submitted code.
+- Code Explanation: Describes important corrections and changes.
+- Code Improvement: Provides recommendations for readability, efficiency, and structure.
+- Test Suggestions: Recommends test cases to verify expected behavior.
+- Code Download: Allows users to download the proposed corrected code.
 
 ## Technologies
 
 - Python
-- Tkinter
-- OpenAI Python SDK
-- OpenAI Responses API
+- Streamlit
+- Ollama
+- Llama 3.2
 
 ## Prompt Engineering
 
-1. Persona Pattern: The AI acts as a patient programming tutor.
-    
-Where: SYSTEM_PROMPT in debugger.py
-The model is assigned the role of a patient programming tutor. It is instructed to explain errors clearly, preserve the user's approach when possible, and acknowledge uncertainty.
+The project incorporates multiple prompt-engineering techniques:
 
-Why it helps: The same code question can receive different responses depending on the role assigned to the AI. The tutor persona is intended to produce explanations that are more appropriate for learners than terse, expert-oriented responses.
-
-2. Structured Output Pattern: The AI organizes its response
-   into Problem, Cause, Fixed Code, Explanation, and Prevention.
-    
-Where: The system instructions and user_prompt in debugger.py
-
-The model must organize its response into five named sections: Problem, Cause, Fixed Code, Explanation, and Prevention.
-
-Why it helps: A consistent structure makes responses easier to navigate and makes it simpler for users to find the corrected code without reading the entire explanation.
+1. **Role Prompting:** Assigns the LLM the role of an experienced code debugging and development assistant.
+2. **Few-Shot Prompting:** Provides examples of code errors and expected debugging responses to guide the model's output.
+3. **Structured Output:** Uses JSON formatting to organize the model's response into predictable fields.
 
 ## Requirements
 
@@ -44,22 +36,68 @@ Why it helps: A consistent structure makes responses easier to navigate and make
 - An OpenAI API key
 - API access and any required billing configuration
 
-## Setup
+## Installation and Setup
 
-1. Clone the repository.
-2. Create and activate a virtual environment.
+### 1. Clone the repository
 
-   python -m venv .venv
-   .venv\Scripts\Activate.ps1
+```bash
+git clone https://github.com/Sooojie/DebuggerAIAgent2.0
+cd DebuggerAIAgent2.0
+```
 
-3. Install dependencies:
+### 2. Create a virtual environment
 
-   pip install -r requirements.txt
+```bash
+python -m venv venv
+```
 
-4. Configure OPENAI_API_KEY as an environment variable.
+Activate the environment on Windows:
 
-   setx OPENAI_API_KEY "YOUR_API_KEY_HERE"
+```powershell
+venv\Scripts\activate
+```
 
-5. Run the application:
+### 3. Install dependencies
 
-   python main.py
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Install Ollama
+
+Download and install Ollama:
+
+https://ollama.com/
+
+Download the Llama 3.2 model:
+
+```bash
+ollama pull llama3.2
+```
+
+Make sure Ollama is running before using the application locally.
+
+### 5. Run the application
+
+Start the Streamlit interface:
+
+```bash
+streamlit run app.py
+```
+
+Alternatively, run the terminal interface:
+
+```bash
+python main.py
+```
+
+## Usage
+
+1. Open the application.
+2. Select the programming language.
+3. Enter or paste source code.
+4. Optionally provide an error message or describe the problem.
+5. Click **Debug My Code**.
+6. Review the AI-generated diagnosis and proposed correction.
+7. Explore the suggestions and recommended test cases.
+8. Download the corrected code if desired.

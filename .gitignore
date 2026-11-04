@@ -1,18 +1,29 @@
+
+# Python virtual environments
+venv/
+.venv/
+
 # Python cache
 __pycache__/
 *.py[cod]
 
-# Virtual environments
-.venv/
-venv/
+# Logs
+logs/
+*.log
 
-# Secrets and local environment configuration
+# Environment variables and secrets
 .env
-.env.*
-.env.example
+.streamlit/secrets.toml
 
-# Editor and operating system files
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE settings
 .vscode/
+.idea/
+
+# Operating system files
 .DS_Store
 Thumbs.db
-.env.example
