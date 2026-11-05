@@ -1,14 +1,15 @@
 
 import json
 import logging
+import os
 import ollama
-
 
 # ---------------------------------------
 # Configuration
 # ---------------------------------------
 
-MODEL_NAME = "llama3.2"
+MODEL_NAME = "qwen3-coder:480b"
+OLLAMA_HOST = "https://ollama.com"
 
 logger = logging.getLogger(__name__)
 
@@ -182,7 +183,22 @@ Please analyze the submitted code and return the required JSON response.
     try:
         logger.info("Sending code to Ollama for analysis.")
 
-        response = ollama.chat(
+        api_key = os.environ.get("OLLAMA_API_KEY")
+
+        if not api_key:
+            raise ValueError(
+                "Ollama API key not found. "
+                "Please configure OLLAMA_API_KEY."
+            )
+
+        client = ollama.Client(
+            host=OLLAMA_HOST,
+            headers={
+                "Authorization": f"Bearer {api_key}"
+            }
+        )
+
+        response = client.chat(
             model=MODEL_NAME,
             messages=messages,
             format="json",
