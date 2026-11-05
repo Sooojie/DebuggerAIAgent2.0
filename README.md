@@ -5,6 +5,8 @@ An AI-powered code debugging and development assistant
 
 The application allows developers to submit source code and receive AI-generated bug diagnoses, explanations, corrected code, improvement suggestions, and recommended test cases.
 
+Deployed on https://debuggeraiagent2-0.onrender.com/
+
 ## Features
 
 - Bug Detection: Identifies potential syntax, runtime, and logical errors.
@@ -21,6 +23,7 @@ The application allows developers to submit source code and receive AI-generated
 - Streamlit
 - Ollama
 - Llama 3.2
+- Render
 
 ## Prompt Engineering
 
