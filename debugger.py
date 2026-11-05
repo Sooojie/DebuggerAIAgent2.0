@@ -8,7 +8,7 @@ import ollama
 # Configuration
 # ---------------------------------------
 
-MODEL_NAME = "qwen3-coder:480b"
+MODEL_NAME = "glm-5.3-flash:cloud"
 OLLAMA_HOST = "https://ollama.com"
 
 logger = logging.getLogger(__name__)
