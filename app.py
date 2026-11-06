@@ -70,8 +70,8 @@ with st.sidebar:
 
     st.subheader("Model Information")
 
-    st.write("**LLM:** Llama 3.2")
-    st.write("**Runtime:** Ollama")
+    st.write("**LLM:** gemini-3.8-flash")
+    st.write("**Runtime:** Google")
     st.write("**Framework:** Streamlit")
 
     st.divider()
@@ -124,7 +124,7 @@ with col1:
 with col2:
 
     st.markdown("#### Debugging Engine")
-    st.info("Ollama | Llama 3.2")
+    st.info("Google | gemini-3.8-flash")
 
 
 code = st.text_area(
@@ -156,7 +156,7 @@ if st.button(
 
     else:
 
-        with st.spinner("Llama 3.2 is analyzing your code..."):
+        with st.spinner("gemini-3.8-flash is analyzing your code..."):
 
             try:
 
@@ -177,8 +177,6 @@ if st.button(
 
                     st.error(
                         "Unable to analyze your code. "
-                        "Please check that Ollama is running "
-                        "and Llama 3.2 is installed."
                     )
 
             except Exception as error:
