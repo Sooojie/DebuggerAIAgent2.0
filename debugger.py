@@ -14,6 +14,7 @@ MODEL_NAME = "gemini-3.8-flash"
 
 logger = logging.getLogger(__name__)
 
+
 # ---------------------------------------
 # Agent Instructions
 # ---------------------------------------
@@ -137,7 +138,7 @@ The function should add the two numbers.
 
 def debug_code(code, language, error_message=""):
     """
-    Analyze source code using the Ollama language model.
+    Analyze source code using the Google Gemini language model.
 
     Args:
         code (str): Source code submitted by the user.
@@ -160,18 +161,18 @@ def debug_code(code, language, error_message=""):
 
     # Build the user's debugging request.
     user_prompt = f"""
-    Programming language: {language}
+Programming language: {language}
 
-    Submitted code:
-    <code>
-    {code}
-    </code>
+Submitted code:
+<code>
+{code}
+</code>
 
-    Error message or additional context:
-    {error_message if error_message.strip() else "No error message provided."}
+Error message or additional context:
+{error_message if error_message.strip() else "No error message provided."}
 
-    Please analyze the submitted code and return the required JSON response.
-    """
+Please analyze the submitted code and return the required JSON response.
+"""
 
     # Prepare conversation history for Gemini.
     contents = []
@@ -190,75 +191,78 @@ def debug_code(code, language, error_message=""):
     })
 
     try:
-    logger.info("Sending code to Gemini for analysis.")
+        logger.info("Sending code to Gemini for analysis.")
 
-    api_key = os.environ.get("GEMINI_API_KEY")
+        api_key = os.environ.get("GEMINI_API_KEY")
 
-    if not api_key:
-        raise ValueError(
-            "Gemini API key not found. "
-            "Please configure GEMINI_API_KEY."
+        if not api_key:
+            raise ValueError(
+                "Gemini API key not found. "
+                "Please configure GEMINI_API_KEY."
+            )
+
+        # Create Gemini client.
+        client = genai.Client(api_key=api_key)
+
+        # Generate response.
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=contents,
+            config=types.GenerateContentConfig(
+                system_instruction=SYSTEM_PROMPT,
+                temperature=0,
+                response_mime_type="application/json"
+            )
         )
 
-    # Create Gemini client.
-    client = genai.Client(api_key=api_key)
+        # Extract the model's response.
+        response_text = response.text
 
-    # Generate response.
-    response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=contents,
-        config=types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT,
-            temperature=0,
-            response_mime_type="application/json"
-        )
-    )
+        if not response_text:
+            raise ValueError("Gemini returned an empty response.")
 
-    # Extract the model's response.
-    response_text = response.text
+        # Convert JSON text into a Python dictionary.
+        result = json.loads(response_text)
 
-    if not response_text:
-        raise ValueError("Gemini returned an empty response.")
+        # Basic response validation.
+        required_fields = {
+            "summary",
+            "bugs",
+            "corrected_code",
+            "explanation",
+            "suggestions",
+            "tests"
+        }
 
-    # Convert JSON text into a Python dictionary.
-    result = json.loads(response_text)
+        if not isinstance(result, dict):
+            raise ValueError("The AI response must be a JSON object.")
 
-    # Basic response validation.
-    required_fields = {
-        "summary",
-        "bugs",
-        "corrected_code",
-        "explanation",
-        "suggestions",
-        "tests"
-    }
+        if set(result.keys()) != required_fields:
+            raise ValueError(
+                "The AI response has missing or unexpected fields."
+            )
 
-    if not isinstance(result, dict):
-        raise ValueError("The AI response must be a JSON object.")
+        if not isinstance(result["summary"], str):
+            raise ValueError("Invalid summary.")
 
-    if set(result.keys()) != required_fields:
-        raise ValueError("The AI response has missing or unexpected fields.")
+        if not isinstance(result["bugs"], list):
+            raise ValueError("Invalid bugs list.")
 
-    if not isinstance(result["summary"], str):
-        raise ValueError("Invalid summary.")
+        if not isinstance(result["corrected_code"], str):
+            raise ValueError("Invalid corrected code.")
 
-    if not isinstance(result["bugs"], list):
-        raise ValueError("Invalid bugs list.")
+        if not isinstance(result["explanation"], str):
+            raise ValueError("Invalid explanation.")
 
-    if not isinstance(result["corrected_code"], str):
-        raise ValueError("Invalid corrected code.")
+        if not isinstance(result["suggestions"], list):
+            raise ValueError("Invalid suggestions.")
 
-    if not isinstance(result["explanation"], str):
-        raise ValueError("Invalid explanation.")
+        if not isinstance(result["tests"], list):
+            raise ValueError("Invalid tests.")
 
-    if not isinstance(result["suggestions"], list):
-        
-    if not isinstance(result["tests"], list):
-        raise ValueError("Invalid tests.")
+        logger.info("Code analysis completed successfully.")
 
-    logger.info("Code analysis completed successfully.")
-
-    return result
+        return result
 
     except json.JSONDecodeError:
         logger.exception("Gemini returned invalid JSON.")
@@ -266,8 +270,4 @@ def debug_code(code, language, error_message=""):
 
     except Exception:
         logger.exception("Unexpected error during Gemini analysis.")
-        return None
-
-    except Exception:
-        logger.exception("Unexpected error during code analysis.")
         return None
