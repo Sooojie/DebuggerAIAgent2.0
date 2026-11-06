@@ -47,7 +47,7 @@ st.title("🐛 AI Code Debugging Assistant")
 
 st.markdown(
     "Analyze, debug, and improve your code using "
-    "artificial intelligence powered by Ollama and Llama 3.2."
+    "artificial intelligence powered by Google AI and gemini-3.8-flash."
 )
 
 st.divider()
@@ -71,7 +71,7 @@ with st.sidebar:
     st.subheader("Model Information")
 
     st.write("**LLM:** gemini-3.8-flash")
-    st.write("**Runtime:** Google")
+    st.write("**Runtime:** Google AI")
     st.write("**Framework:** Streamlit")
 
     st.divider()
@@ -124,7 +124,7 @@ with col1:
 with col2:
 
     st.markdown("#### Debugging Engine")
-    st.info("Google | gemini-3.8-flash")
+    st.info("Google AI | gemini-3.8-flash")
 
 
 code = st.text_area(
